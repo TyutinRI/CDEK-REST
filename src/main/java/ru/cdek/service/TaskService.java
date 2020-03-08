@@ -7,12 +7,14 @@ import java.util.List;
 
 public interface TaskService {
 
-    void save();
+    void save(Task task);
+
+    Task saveIsNotBeInTimeTask(Long number);
 
     List<Task> findAll();
 
-    List<Task> findById(Long id);
-
     List<Task> findByDatePeriod(LocalDateTime firstDate, LocalDateTime secondDate);
+
+    Task findById(Long id);
 
 }

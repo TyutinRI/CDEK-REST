@@ -1,6 +1,8 @@
 package ru.cdek.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -9,13 +11,14 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Tasks")
+@Table(name = "task_list")
 public class Task implements Serializable {
     public static final long serialVersionUID = 1L;
 
     @Id
     private Long id;
-    @Column(name = "date/time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @Column(name = "date_and_time")
     private LocalDateTime date;
     @Column(name = "task_is_performed")
     private boolean isPerformed;
