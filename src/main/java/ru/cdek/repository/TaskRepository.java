@@ -10,6 +10,10 @@ import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
+     /**
+      * Метод, возвращающий из базы данных список заданий {@link Task} с датой добавления между
+      * двумя датами, переданными в параметры метода.
+      */
      List<Task> findByDateBetween(LocalDateTime firstDate, LocalDateTime secondDate);
 
 }

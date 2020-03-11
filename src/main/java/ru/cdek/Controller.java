@@ -13,6 +13,8 @@ import ru.cdek.service.TaskService;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import ru.cdek.service.*;
+
 @RestController
 @RequestMapping(value = "tasks")
 public class Controller {
@@ -23,6 +25,15 @@ public class Controller {
         this.taskService = taskService;
     }
 
+
+//================================FOR COURIER==============================================================
+
+    /**
+     * Метод для добавления новой задачи от курьера
+     * @param id - номер задачи
+     * @return {@link Task} если задача успешно добавлена, и ошибку (Bad request), если не получен id или
+     * задача {@link Task} с таки номером уже есть вбазе данных
+     */
     @PostMapping(value = "courier/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Task> createTaskFromCourier(@PathVariable("id") Long id){
         if(id == null){
@@ -36,8 +47,12 @@ public class Controller {
         return new ResponseEntity<>(savedTask, HttpStatus.CREATED);
     }
 
+//================================FOR CALLCENTER===========================================================
 
-
+    /**
+     * Метод для получения списка всех задач {@link Task} из базы данных
+     * @return список всех {@link Task} в формате JSON или ошибку (Not Found), если в базе нет задач
+     */
     @GetMapping(value = "callcenter", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Task>> showAllTasks(){
         List<Task> taskList = taskService.findAll();
@@ -47,6 +62,12 @@ public class Controller {
         return new ResponseEntity<>(taskList, HttpStatus.OK);
     }
 
+    /**
+     * Метод для получения задачи {@link Task} из базы данных с соответствующим номером
+     * @return {@link Task} в формате JSON,
+     * ошибку (Not Found), если в базе нет задачи с таким id,
+     * ошибку (Bad request), если не получен id
+     */
     @GetMapping(value = "callcenter/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Task> showTaskById(@PathVariable("id") Long id){
         if(id == null){
@@ -60,6 +81,13 @@ public class Controller {
         return new ResponseEntity<>(task, HttpStatus.OK);
     }
 
+    /**
+     * Метод для получения списка всех задач {@link Task} из базы данных в интервале между датами,
+     * заданными формате "yyyy-MM-dd HH:mm"
+     * @return список всех {@link Task} в формате JSON (подробнее {@link TaskServiceImpl}),
+     * ошибку (Not Found), если в базе нет задач в заданном диапазоне дат,
+     * ошибку (Bad request), если не получены даты
+     */
     @GetMapping(value = "callcenter/{firstDate}/{secondDate}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Task>> showTaskOverDatePeriod(
             @PathVariable("firstDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
@@ -78,7 +106,10 @@ public class Controller {
         return new ResponseEntity<>(taskList, HttpStatus.OK);
     }
 
-
+    /**
+     * Метод, для обработки исключений, при несоответствии значений PathVariable требуемому формату
+     * @return ошибку (Bad request)
+     */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<?> handleException(){
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

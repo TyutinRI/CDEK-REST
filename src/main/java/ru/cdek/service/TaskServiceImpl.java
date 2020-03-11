@@ -27,7 +27,7 @@ public class TaskServiceImpl implements TaskService{
 
     /**
      * Метод для сохранения задачи для Call-центра, для сообщения клиенту о том, что курьер не приедет.
-     * @param number - номер заказа
+     * @param number - номер(id) заказа
      * @return {@link Task}  если задача успешно сохранена
      *         {@code null} - если задача для заказа с таким номером уже существует
      */
@@ -47,6 +47,19 @@ public class TaskServiceImpl implements TaskService{
         return taskRepository.findAll();
     }
 
+    /**
+     * Метод, возвращающий из базы данных список заданий {@link Task} с датой добавления между
+     * двумя датами, переданными в параметры метода.
+     * Метод работает не зависимо какая из дат больше, и возвращает все задачи {@link Task},
+     * даты которых лежат во временном диапазоне между мелньшей и большей датой. Даты задаются
+     * с точьностью до минуты. В результирующую выборку включаются также и задачи {@link Task},
+     * с датой и временем добавления, равными датам, переданным в параметры с точностью до минуты.
+     * Если даты, переданные в параметры равны с точностью до минуты, то возвращается выборка
+     * задач {@link Task}, датой и временем создания, соответствующим этой минуте.
+     * @param firstDate дата в формате "yyyy-MM-dd HH:mm"
+     * @param secondDate дата в формате "yyyy-MM-dd HH:mm"
+     * @return список {@link Task}
+     */
     @Override
     public List<Task> findByDatePeriod(LocalDateTime firstDate, LocalDateTime secondDate) {
         int compareResult = firstDate.compareTo(secondDate);
